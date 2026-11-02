@@ -39,6 +39,10 @@ pifran install npm:pkg      # Pi subcommands run inside the pifran home
 |---|---|
 | `PIFRAN_HOME` | Overrides the home directory (default `~/.pifran/agent`). |
 
+## Notion
+
+`extensions/notion.ts` connects the official Notion MCP server (`https://mcp.notion.com/mcp`) with `deferred` exposure. Sign in once from a session with `/mcp login notion`.
+
 ## Customize
 
 Add files and reinstall:

@@ -2,7 +2,6 @@
   "theme": "TokyoNight-Fran",
   "quietStartup": true,
   "packages": [
-    "npm:gentle-engram",
     "npm:pi-web-access",
     "npm:pi-btw"
   ],

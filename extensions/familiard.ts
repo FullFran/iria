@@ -1,18 +1,31 @@
-// Reports Gentle Shell (Pi) activity to the desktop pet (scripts/iria-desktop).
-// Does nothing when the pet is not installed.
+// Reports pifran activity to familiard, so a desktop pet follows the session.
+// Does nothing when familiard is not installed.
 import { spawn } from "node:child_process"
 import { existsSync } from "node:fs"
 import { homedir } from "node:os"
-import { join } from "node:path"
+import { delimiter, join } from "node:path"
 
-const FAMILIARD_BIN = join(homedir(), ".local/share/iria-desktop/familiard")
+const AGENT = "pifran"
+
+// familiard on PATH first, then the copy iria-desktop installs.
+function findFamiliard(): string | undefined {
+  for (const dir of (process.env.PATH ?? "").split(delimiter)) {
+    if (!dir) continue
+    const candidate = join(dir, "familiard")
+    if (existsSync(candidate)) return candidate
+  }
+  const iria = join(homedir(), ".local/share/iria-desktop/familiard")
+  return existsSync(iria) ? iria : undefined
+}
 
 export default function (pi: any) {
+  const bin = findFamiliard()
+  if (!bin) return
+
   const send = (state: string, ctx: any) => {
-    if (!existsSync(FAMILIARD_BIN)) return
     try {
       const session = ctx?.sessionManager?.getSessionFile?.() || ctx?.cwd || process.cwd()
-      const child = spawn(FAMILIARD_BIN, ["hook", "--agent", "pi", "--event", state, "--session", session, "--project", ctx?.cwd || process.cwd()], {
+      const child = spawn(bin, ["hook", "--agent", AGENT, "--event", state, "--session", session, "--project", ctx?.cwd || process.cwd()], {
         stdio: "ignore",
         detached: true,
       })

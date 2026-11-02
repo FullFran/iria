@@ -7,14 +7,11 @@ import { createRequire } from "node:module";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildArgs } from "../lib/args.mjs";
 import { seedSettings } from "../lib/settings.mjs";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const PI_PACKAGE = "@earendil-works/pi-coding-agent";
-
-// Pi subcommands that manage state instead of opening a session. They must not
-// receive `-e`, or the package would be passed as an argument to the command.
-const PI_SUBCOMMANDS = new Set(["install", "remove", "uninstall", "update", "list", "config", "auth", "mcp"]);
 
 function resolvePiCli() {
 	const require = createRequire(join(PACKAGE_ROOT, "package.json"));
@@ -33,14 +30,13 @@ function resolvePiCli() {
 	return join(dirname(manifestPath), bin);
 }
 
-function buildArgs(userArgs) {
-	if (PI_SUBCOMMANDS.has(userArgs[0])) return userArgs;
-	const args = ["-e", PACKAGE_ROOT];
-	// Orca launches this binary from its OMP row and hands over a status
-	// extension so its sidebar can show the agent state.
+// Orca hands over its status extension so its sidebar can show the agent state.
+function piArgs() {
 	const orcaStatus = process.env.ORCA_OMP_STATUS_EXTENSION;
-	if (orcaStatus && existsSync(orcaStatus)) args.push("-e", orcaStatus);
-	return [...args, ...userArgs];
+	return buildArgs(process.argv.slice(2), {
+		root: PACKAGE_ROOT,
+		orcaStatus: orcaStatus && existsSync(orcaStatus) ? orcaStatus : undefined,
+	});
 }
 
 function main() {
@@ -56,7 +52,7 @@ function main() {
 		process.exit(1);
 	}
 
-	const child = spawn(process.execPath, [cli, ...buildArgs(process.argv.slice(2))], {
+	const child = spawn(process.execPath, [cli, ...piArgs()], {
 		stdio: "inherit",
 		env: { ...process.env, PI_CODING_AGENT_DIR: home },
 	});

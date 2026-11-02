@@ -1,6 +1,6 @@
 {
   "name": "pifran",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Fran's personal Pi coding agent: an isolated Pi home plus a bundled package of extensions, themes, prompts and skills.",
   "type": "module",
   "license": "MIT",
@@ -12,6 +12,8 @@
   },
   "files": [
     "bin",
+    "lib",
+    "defaults",
     "extensions",
     "themes",
     "prompts",
@@ -37,5 +39,8 @@
     "skills": [
       "./skills"
     ]
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
   }
 }

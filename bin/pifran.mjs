@@ -7,6 +7,7 @@ import { createRequire } from "node:module";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { seedSettings } from "../lib/settings.mjs";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const PI_PACKAGE = "@earendil-works/pi-coding-agent";
@@ -45,6 +46,7 @@ function buildArgs(userArgs) {
 function main() {
 	const home = process.env.PIFRAN_HOME || join(homedir(), ".pifran", "agent");
 	mkdirSync(home, { recursive: true });
+	seedSettings(home, join(PACKAGE_ROOT, "defaults", "settings.json"));
 
 	let cli;
 	try {

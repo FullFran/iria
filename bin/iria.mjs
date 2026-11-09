@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// pifran launcher: runs the bundled Pi with an isolated home and loads this
+// iria launcher: runs the bundled Pi with an isolated home and loads this
 // repository as a Pi package, the same shape Gentle Shell uses for gentle-pi.
 import { spawn } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
@@ -8,6 +8,7 @@ import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildArgs } from "../lib/args.mjs";
+import { resolveHome } from "../lib/home.mjs";
 import { seedSettings } from "../lib/settings.mjs";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -22,11 +23,11 @@ function resolvePiCli() {
 		manifestPath = join(PACKAGE_ROOT, "node_modules", PI_PACKAGE, "package.json");
 	}
 	if (!existsSync(manifestPath)) {
-		throw new Error(`pifran: ${PI_PACKAGE} is not installed next to ${PACKAGE_ROOT}`);
+		throw new Error(`iria: ${PI_PACKAGE} is not installed next to ${PACKAGE_ROOT}`);
 	}
 	const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 	const bin = typeof manifest.bin === "string" ? manifest.bin : manifest.bin?.pi;
-	if (!bin) throw new Error(`pifran: ${PI_PACKAGE} does not declare a pi binary`);
+	if (!bin) throw new Error(`iria: ${PI_PACKAGE} does not declare a pi binary`);
 	return join(dirname(manifestPath), bin);
 }
 
@@ -40,7 +41,10 @@ function piArgs() {
 }
 
 function main() {
-	const home = process.env.PIFRAN_HOME || join(homedir(), ".pifran", "agent");
+	const { home, legacy } = resolveHome(process.env, homedir(), existsSync);
+	if (legacy) {
+		console.error(`iria: using the old pifran home ${home}; set IRIA_HOME or move it to ~/.iria/agent.`);
+	}
 	mkdirSync(home, { recursive: true });
 	seedSettings(home, join(PACKAGE_ROOT, "defaults", "settings.json"));
 
@@ -64,7 +68,7 @@ function main() {
 		process.on(signal, () => child.kill(signal));
 	}
 	child.on("error", (error) => {
-		console.error(`pifran: failed to start Pi: ${error.message}`);
+		console.error(`iria: failed to start Pi: ${error.message}`);
 		process.exit(1);
 	});
 	child.on("exit", (code, signal) => {

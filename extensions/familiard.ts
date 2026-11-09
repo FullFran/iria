@@ -1,11 +1,11 @@
-// Reports pifran activity to familiard, so a desktop pet follows the session.
+// Reports iria activity to familiard, so a desktop pet follows the session.
 // Does nothing when familiard is not installed.
 import { spawn } from "node:child_process"
 import { existsSync } from "node:fs"
 import { homedir } from "node:os"
 import { delimiter, join } from "node:path"
 
-const AGENT = "pifran"
+const AGENT = "iria"
 
 // familiard on PATH first, then the copy iria-desktop installs.
 function findFamiliard(): string | undefined {

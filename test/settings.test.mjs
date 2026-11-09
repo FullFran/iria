@@ -22,7 +22,7 @@ test("reports no change when every default is already present", () => {
 });
 
 test("seedSettings creates settings.json and leaves a valid file untouched on rerun", () => {
-	const dir = mkdtempSync(join(tmpdir(), "pifran-"));
+	const dir = mkdtempSync(join(tmpdir(), "iria-"));
 	try {
 		const defaults = join(dir, "defaults.json");
 		writeFileSync(defaults, JSON.stringify({ quietStartup: true }));
@@ -38,7 +38,7 @@ test("seedSettings creates settings.json and leaves a valid file untouched on re
 });
 
 test("seedSettings never rewrites a settings.json it cannot parse", () => {
-	const dir = mkdtempSync(join(tmpdir(), "pifran-"));
+	const dir = mkdtempSync(join(tmpdir(), "iria-"));
 	try {
 		const defaults = join(dir, "defaults.json");
 		writeFileSync(defaults, JSON.stringify({ quietStartup: true }));

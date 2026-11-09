@@ -11,7 +11,7 @@ Iria, Fran's personal [Pi](https://pi.dev) agent (formerly pifran). It is the sa
 Install into a dedicated prefix. A plain `npm i -g` would also work, but a separate prefix keeps the bundled `pi` out of your `PATH`.
 
 ```sh
-npm i -g --prefix ~/.local/share/iria github:FullFran/pifran
+npm i -g --prefix ~/.local/share/iria github:FullFran/iria
 ln -s ~/.local/share/iria/bin/iria ~/.local/bin/iria
 ```
 

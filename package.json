@@ -1,14 +1,15 @@
 {
-  "name": "pifran",
+  "name": "iria",
   "version": "0.3.2",
-  "description": "Fran's personal Pi coding agent: an isolated Pi home plus a bundled package of extensions, themes, prompts and skills.",
+  "description": "Iria, Fran's personal Pi agent: an isolated Pi home plus a bundled package of extensions, themes, prompts and skills.",
   "type": "module",
   "license": "MIT",
   "keywords": [
     "pi-package"
   ],
   "bin": {
-    "pifran": "bin/pifran.mjs"
+    "iria": "bin/iria.mjs",
+    "pifran": "bin/iria.mjs"
   },
   "files": [
     "bin",
